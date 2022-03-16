@@ -39,6 +39,8 @@ if __name__ == "__main__":
 
         page = r.json()["page"]
 
+        print(f"Page {page} done")
+
         with open(f"data/data_{page}.json", "w") as f:
             json.dump(r.json(), f)
 
