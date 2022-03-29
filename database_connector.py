@@ -28,10 +28,10 @@ class NftDatabaseConnector:
     def use_database(self, name):
         self.__execute_command(f"USE {name}")
 
-    def insert_nft(self, table_name, nft_dict: dict):
+    def insert_value(self, table_name, value_dict):
         columns = []
         values = []
-        for key, value in nft_dict.items():
+        for key, value in value_dict.items():
             columns.append(key)
             value = str(value).replace("'", "''")
             values.append(f"'{value}'")
