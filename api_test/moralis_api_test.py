@@ -1,4 +1,4 @@
-from database_connector import NftDatabaseConnector
+from connectors.database_connector import NftDatabaseConnector
 import requests
 import config
 import json
