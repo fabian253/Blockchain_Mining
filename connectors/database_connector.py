@@ -1,8 +1,8 @@
-from dataclasses import replace
+from mysql.connector.locales.eng import client_error
 import mysql.connector
 
 
-class NftDatabaseConnector:
+class MySqlDatabaseConnector:
 
     def __init__(self) -> None:
         self.cnx = None
@@ -20,7 +20,9 @@ class NftDatabaseConnector:
     def __execute_command(self, command):
         cursor = self.cnx.cursor()
         cursor.execute(command)
+        result = cursor.fetchall()
         cursor.close()
+        return result
 
     def create_database(self, name):
         self.__execute_command(f"CREATE DATABASE {name}")
@@ -42,3 +44,7 @@ class NftDatabaseConnector:
         self.__execute_command(command)
 
         self.cnx.commit()
+    
+    def select_value(self, query):
+        test = self.__execute_command(query)
+        return test
