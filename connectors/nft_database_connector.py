@@ -12,9 +12,13 @@ class NftDatabaseConnector:
     def __del__(self) -> None:
         self.db_cnx.disconnect()
 
-    def query_current_nft_owners(self) -> list:
-        nft_owners = self.db_cnx.select_value(
-            "select owner_of from nft;")
+    def query_current_nft_owners(self, contract_address=None) -> list:
+        if contract_address == None:
+            nft_owners = self.db_cnx.select_value(
+                "select owner_of from nft;")
+        else:
+            nft_owners = self.db_cnx.select_value(
+                f"select owner_of from nft where token_address = '{contract_address}';")
 
         nft_owners_df = pd.DataFrame(nft_owners, columns=["nft_owners"])
 
@@ -43,8 +47,8 @@ class NftDatabaseConnector:
 
         return data_df
 
-    def query_unique_nft_owners(self) -> list:
-        nft_owners = self.query_current_nft_owners()
+    def query_unique_nft_owners(self, contract_address=None) -> list:
+        nft_owners = self.query_current_nft_owners(contract_address)
 
         nft_owners_df = pd.DataFrame(nft_owners, columns=["nft_owners"])
 
