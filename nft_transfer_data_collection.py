@@ -66,6 +66,11 @@ if __name__ == "__main__":
         # filter wallets for wallets that are already in db
         wallet_list = [
             wallet for wallet in wallet_list if wallet not in db_wallets]
+    
+    # remove dead address
+    dead_address = "0x000000000000000000000000000000000000dead"
+    if dead_address in wallet_list:
+        wallet_list.remove(dead_address)
 
     # request nft transfer data for every common wallet
     for idx, wallet_address in enumerate(wallet_list):
