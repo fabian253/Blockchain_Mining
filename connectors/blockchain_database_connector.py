@@ -176,11 +176,11 @@ class BlockchainDatabaseConnector:
             self.db_cnx.insert_value(table_name, nft_balance_data)
 
     # insert ft transfer data
-    def inser_ft_transfer_data(self, table_name, ft_transfer_data_list: list):
+    def insert_ft_transfer_data(self, table_name, ft_transfer_data_list: list):
         for ft_transfer_data in ft_transfer_data_list:
             self.db_cnx.insert_value(table_name, ft_transfer_data)
 
     # insert nft transfer data
-    def inser_nft_transfer_data(self, table_name, nft_transfer_data_list: list):
+    def insert_nft_transfer_data(self, table_name, nft_transfer_data_list: list):
         for nft_transfer_data in nft_transfer_data_list:
             self.db_cnx.insert_value(table_name, nft_transfer_data)
