@@ -1,5 +1,4 @@
 import requests
-import datetime
 from time import sleep
 
 
@@ -11,58 +10,122 @@ class ApiConnector:
         self.api_rate_limit = api_rate_limit
         self.headers = {"x-api-key": self.api_key}
 
-    #TODO create working version
-    def rate_limit_decorator(func):
-        def rate_limit_wrapper(self, *args, **kwargs):
-            start_time = datetime.datetime.now()
-            value = func(self, *args, **kwargs)
-            end_time = datetime.datetime.now()
-            execution_time = (end_time-start_time).total_seconds()*1000
-
-            print(execution_time)
-
-            if execution_time < 1000/(self.api_rate_limit/5):
-                wait_time = (1000/(self.api_rate_limit/5) -
-                             execution_time+1)/1000
-                print(f"waittime: {wait_time}")
-                sleep(wait_time)
-
-            return value
-
-        return rate_limit_wrapper
-    
-
+    # request endpoint weights
     def request_endpoint_weights(self):
         response = requests.get(
             f"{self.api_url}//info/endpointWeights", headers=self.headers)
         return response
 
-    def request_nft_owners(self, contract_address, cursor=None, chain="eth", format="decimal"):
+    # request nft data (owners) by contract_address
+    def request_nft_data(self, contract_address, cursor=None, chain="eth", format="decimal", sleep_time=0.2):
+        # build params
         params = {"chain": chain, "format": format}
         if cursor is not None:
             params["cursor"] = cursor
-        response = requests.get(f"{self.api_url}/nft/{contract_address}/owners",
-                                headers=self.headers, params=params)
-        sleep(1)
+
+        r_status_code = 0
+
+        # request data
+        while r_status_code != 200:
+            response = requests.get(f"{self.api_url}/nft/{contract_address}/owners",
+                                    headers=self.headers, params=params)
+            r_status_code = response.status_code
+
+            sleep(sleep_time)
+
         return response
 
-    def request_nft_transfers(self, contract_address, cursor=None, chain="eth", format="decimal"):
+    # request ft balance data by wallet_address
+    def request_ft_balance_data(self, wallet_address, cursor=None, chain="eth", format="decimal", sleep_time=0.2):
+        # build params
         params = {"chain": chain, "format": format}
         if cursor is not None:
             params["cursor"] = cursor
-        response = requests.get(f"{self.api_url}/nft/{contract_address}/transfers",
-                                headers=self.headers, params=params)
-        sleep(1)
+
+        r_status_code = 0
+
+        # request data
+        while r_status_code != 200:
+            response = requests.get(f"{self.api_url}/{wallet_address}/erc20",
+                                    headers=self.headers, params=params)
+            r_status_code = response.status_code
+
+            sleep(sleep_time)
+
         return response
-    
-    def request_erc20_transfers(self, wallet_address, cursor=None, chain="eth", format="decimal"):
+
+    # request nft balance data by wallet_address
+    def request_nft_balance_data(self, wallet_address, cursor=None, chain="eth", format="decimal", sleep_time=0.2):
+        # build params
         params = {"chain": chain, "format": format}
         if cursor is not None:
             params["cursor"] = cursor
-        response = requests.get(f"{self.api_url}/{wallet_address}/erc20/transfers",
-                                headers=self.headers, params=params)
-        if response.status_code != 200:
-            sleep(0.05)
+
+        r_status_code = 0
+
+        # request data
+        while r_status_code != 200:
+            response = requests.get(f"{self.api_url}/{wallet_address}/nft",
+                                    headers=self.headers, params=params)
+            r_status_code = response.status_code
+
+            sleep(sleep_time)
+
+        return response
+
+    # request ft transfer data by wallet_address
+    def request_ft_transfer_data_by_wallet_address(self, wallet_address, cursor=None, chain="eth", format="decimal", sleep_time=0.2):
+        # build params
+        params = {"chain": chain, "format": format}
+        if cursor is not None:
+            params["cursor"] = cursor
+
+        r_status_code = 0
+
+        # request data
+        while r_status_code != 200:
             response = requests.get(f"{self.api_url}/{wallet_address}/erc20/transfers",
-                                headers=self.headers, params=params)
+                                    headers=self.headers, params=params)
+            r_status_code = response.status_code
+
+            sleep(sleep_time)
+
+        return response
+
+    # request nft transfer data by wallet_address
+    def request_nft_transfer_data_by_wallet_address(self, wallet_address, cursor=None, chain="eth", format="decimal", sleep_time=0.2):
+        # build params
+        params = {"chain": chain, "format": format}
+        if cursor is not None:
+            params["cursor"] = cursor
+
+        r_status_code = 0
+
+        # request data
+        while r_status_code != 200:
+            response = requests.get(f"{self.api_url}/{wallet_address}/nft/transfers",
+                                    headers=self.headers, params=params)
+            r_status_code = response.status_code
+
+            sleep(sleep_time)
+
+        return response
+
+    # request nft transfer data by contract_address
+    def request_nft_transfer_data_by_contract_address(self, contract_address, cursor=None, chain="eth", format="decimal", sleep_time=0.2):
+        # build params
+        params = {"chain": chain, "format": format}
+        if cursor is not None:
+            params["cursor"] = cursor
+
+        r_status_code = 0
+
+        # request data
+        while r_status_code != 200:
+            response = requests.get(f"{self.api_url}/nft/{contract_address}/transfers",
+                                    headers=self.headers, params=params)
+            r_status_code = response.status_code
+
+            sleep(sleep_time)
+
         return response
