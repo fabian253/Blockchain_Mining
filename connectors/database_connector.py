@@ -7,15 +7,18 @@ class MySqlDatabaseConnector:
     def __init__(self) -> None:
         self.cnx = None
 
+    def __del__(self) -> None:
+        try:
+            self.cnx.close()
+        except Exception:
+            pass
+
     def connect(self, host, user, password):
         self.cnx = mysql.connector.connect(
             host=host,
             user=user,
             password=password
         )
-
-    def disconnect(self):
-        self.cnx.close()
 
     def __execute_command(self, command):
         cursor = self.cnx.cursor()
@@ -44,7 +47,7 @@ class MySqlDatabaseConnector:
         self.__execute_command(command)
 
         self.cnx.commit()
-    
+
     def select_value(self, query):
         test = self.__execute_command(query)
         return test
