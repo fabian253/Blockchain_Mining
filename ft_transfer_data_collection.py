@@ -2,6 +2,7 @@ from connectors.api_connector import ApiConnector
 from connectors.blockchain_database_connector import BlockchainDatabaseConnector
 import config
 import pandas as pd
+import os
 
 
 # request ft transfer data per wallet from api
@@ -22,7 +23,7 @@ def request_ft_transfer_data(api_cnx: ApiConnector, wallet_address):
         #print(f"Page {page} done")
 
         cursor = r.json()["cursor"]
-        if cursor == "":
+        if cursor == "" or cursor == None:
             break
 
     return ft_transfer_list
@@ -57,6 +58,15 @@ if __name__ == "__main__":
     # remove duplicates
     wallet_list = list(dict.fromkeys(nft_wallet_list))
 
+    # read wallets from log file
+    if os.path.exists("logs/ft_transfer_data_collection_log.txt"):
+        with open("logs/ft_transfer_data_collection_log.txt", "r") as log_file:
+            db_wallets = log_file.readlines()
+            db_wallets = [wallet.replace("\n", "") for wallet in db_wallets]
+        # filter wallets for wallets that are already in db
+        wallet_list = [
+            wallet for wallet in wallet_list if wallet not in db_wallets]
+
     # request ft transfer data for every common wallet
     for idx, wallet_address in enumerate(wallet_list):
         try:
@@ -65,8 +75,12 @@ if __name__ == "__main__":
                 api_cnx, wallet_address)
 
             # insert nft balance data into db
-            db_cnx.inser_ft_transfer_data(
+            db_cnx.insert_ft_transfer_data(
                 config.MYSQL_DB_TABLE_NAME_FT_TRANSFER, ft_transfer_data)
+
+            # write wallet address to log file
+            with open("logs/ft_transfer_data_collection_log.txt", "a") as log_file:
+                log_file.write(f"\n{wallet_address}")
 
             print(
                 f"Wallet {wallet_address} done [{idx +1}/{len(wallet_list)}]")

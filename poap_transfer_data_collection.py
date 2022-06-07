@@ -1,7 +1,7 @@
 from connectors.api_connector import ApiConnector
 from connectors.blockchain_database_connector import BlockchainDatabaseConnector
 import config
-import pandas as pd
+import os
 
 
 # request nft transfer data per wallet from api
@@ -22,7 +22,7 @@ def request_nft_transfer_data(api_cnx: ApiConnector, wallet_address):
         #print(f"Page {page} done")
 
         cursor = r.json()["cursor"]
-        if cursor == "":
+        if cursor == "" or cursor == None:
             break
 
     return nft_transfer_list
@@ -61,7 +61,17 @@ if __name__ == "__main__":
     poap_wallets = poap_data_df["owner_of"].unique()
 
     # get common pfp and poap wallets
-    common_wallets = [wallet for wallet in pfp_wallets if wallet in poap_wallets]
+    common_wallets = [
+        wallet for wallet in pfp_wallets if wallet in poap_wallets]
+
+    # read wallets from log file
+    if os.path.exists("logs/poap_transfer_data_collection_log.txt"):
+        with open("logs/poap_transfer_data_collection_log.txt", "r") as log_file:
+            db_wallets = log_file.readlines()
+            db_wallets = [wallet.replace("\n", "") for wallet in db_wallets]
+        # filter wallets for wallets that are already in db
+        common_wallets = [
+            wallet for wallet in common_wallets if wallet not in db_wallets]
 
     # request nft transfer data for every common wallet
     for idx, wallet_address in enumerate(common_wallets):
@@ -71,8 +81,12 @@ if __name__ == "__main__":
                 api_cnx, wallet_address)
 
             # insert nft balance data into db
-            db_cnx.inser_nft_transfer_data(
+            db_cnx.insert_nft_transfer_data(
                 config.MYSQL_DB_TABLE_NAME_POAP_TRANSFER, nft_transfer_data)
+
+            # write wallet address to log file
+            with open("logs/poap_transfer_data_collection_log.txt", "a") as log_file:
+                log_file.write(f"\n{wallet_address}")
 
             print(
                 f"Wallet {wallet_address} done [{idx +1}/{len(common_wallets)}]")

@@ -21,7 +21,7 @@ def request_nft_balance_data(api_cnx: ApiConnector, wallet_address):
         #print(f"Page {page} done")
 
         cursor = r.json()["cursor"]
-        if cursor == "":
+        if cursor == "" or cursor == None:
             break
 
     return nft_balance_list
