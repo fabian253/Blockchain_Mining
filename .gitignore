@@ -60,7 +60,7 @@ config.py
 __pycache__
 datasets/
 !datasets/pfp_collections.csv
-!logs
+!logs/tmp.txt
 other_files/
 data/
 logs/ft_transfer_data_collection_log.txt
