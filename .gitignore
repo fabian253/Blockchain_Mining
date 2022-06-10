@@ -64,3 +64,4 @@ results/
 logs/ft_transfer_data_collection_log.txt
 logs/nft_transfer_data_collection_log.txt
 logs/poap_transfer_data_collection_log.txt
+nft_transfer_graph.py
