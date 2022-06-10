@@ -26,7 +26,7 @@ There is a "config.py" file included in the git. However, the following attribut
 - MYSQL_DB_HOST -> mysql host ("localhost")
 - MYSQL_DB_USER -> mysql user ("user")
 - MYSQL_DB_PASSWORD -> mysql password
-- MORALIS_API_URL -> use your own api key (https://moralis.io)
+- MORALIS_API_KEY -> use your own api key (https://moralis.io)
 
 ## Data Collection
 There are different python files for collecting data. These store the data in a MySql database. A backup of this database can be found under the following Google Drive link. You can import this backup with the help of "mysqldump" (https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html). The name of the backup file is: "blockchain_mining_db.sql"
