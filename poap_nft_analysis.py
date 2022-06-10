@@ -202,9 +202,9 @@ if __name__ == "__main__":
     poap_wallets = poap_data_df["owner_of"].unique()
 
     # flags for data loading
-    load_poap_transfers_from_db = False
+    load_poap_transfers_from_db = True
     save_poap_transfer_to_pkl = True
-    load_nft_balance_from_db = False
+    load_nft_balance_from_db = True
     save_nft_balance_to_pkl = True
 
     # load poap transfer data
