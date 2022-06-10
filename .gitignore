@@ -58,10 +58,11 @@ Temporary Items
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
 config.py
 __pycache__
-other_files/
 datasets/
-results/
+!datasets/pfp_collections.csv
+!logs
+other_files/
+data/
 logs/ft_transfer_data_collection_log.txt
 logs/nft_transfer_data_collection_log.txt
 logs/poap_transfer_data_collection_log.txt
-nft_transfer_graph.py
