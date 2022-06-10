@@ -144,29 +144,52 @@ if __name__ == "__main__":
         config.MYSQL_DB_NAME
     )
 
+    # file names
+    ft_balance_data_file_name = "datasets/pp_ft_balance_dataset.pkl"
+    nft_balance_data_file_name = "datasets/pp_nft_balance_dataset.pkl"
+    hyperparameter_data_file_name = "results/hyperparameter_optimization_data.json"
+    nft_recommender_eval_file_name = "results/nft_recommender_eval.csv"
+    nft_random_recommender_eval_file_name = "results/nft_random_recommender_eval.csv"
+
     # setup nft recommender
     nft_recommender = NftRecommender()
 
-    nft_recommender.load_ft_balance_data_from_pkl(
-        "datasets/pp_ft_balance_dataset.pkl")
-    nft_recommender.load_nft_balance_data_from_pkl(
-        "datasets/pp_nft_balance_dataset.pkl")
+    # flag if data should be loaded from db or file and if it should be saved to pkl
+    load_from_db = True
+    save_to_pkl = True
+
+    if load_from_db:
+        nft_recommender.load_ft_balance_data_from_db(
+            db_cnx, config.MYSQL_DB_TABLE_NAME_FT_BALANCE)
+        nft_recommender.load_ft_balance_data_from_db(
+            db_cnx, config.MYSQL_DB_TABLE_NAME_FT_BALANCE)
+        nft_recommender.preprocess_data()
+        # save data to pkl
+        if save_to_pkl:
+            nft_recommender.save_ft_balance_data_to_pkl(
+                ft_balance_data_file_name)
+            nft_recommender.save_nft_balance_data_to_pkl(
+                nft_balance_data_file_name)
+    else:
+        nft_recommender.load_ft_balance_data_from_pkl(
+            ft_balance_data_file_name)
+        nft_recommender.load_nft_balance_data_from_pkl(
+            nft_balance_data_file_name)
+
     nft_recommender.build_wallet_similarity_matrix()
 
     # get wallet testset
     test_wallet_list = nft_recommender.get_wallet_testset(
         test_size, random_state)
 
-    #file names
-    hyperparameter_data_file_name = "results/hyperparameter_optimization_data.json"
-    nft_recommender_eval_file_name = "results/nft_recommender_eval.csv"
-    nft_random_recommender_eval_file_name = "results/nft_random_recommender_eval.csv"
-
     # perform hyperparameter optimization
-    perform_hyperparameter_optimization(nft_recommender, test_wallet_list, hyperparameter_data_file_name)
+    perform_hyperparameter_optimization(
+        nft_recommender, test_wallet_list, hyperparameter_data_file_name)
 
     # evaluate nft recommender
-    evaluate_nft_recommender(hyperparameter_data_file_name, nft_recommender_eval_file_name)
+    evaluate_nft_recommender(
+        hyperparameter_data_file_name, nft_recommender_eval_file_name)
 
     # evaluate random recommender
-    evaluate_random_nft_recommender(nft_recommender, test_wallet_list, nft_random_recommender_eval_file_name)
+    evaluate_random_nft_recommender(
+        nft_recommender, test_wallet_list, nft_random_recommender_eval_file_name)
