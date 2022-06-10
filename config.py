@@ -1,0 +1,26 @@
+#general
+POAP_CONTRACT_ADDRESS = "0x22C1f6050E56d2876009903609a2cC3fEf83B415"
+
+#mysql
+MYSQL_DB_HOST = "" #TODO Add
+MYSQL_DB_USER = "" #TODO Add
+MYSQL_DB_PASSWORD = "" #TODO Add
+MYSQL_DB_NAME = "blockchain_mining"
+MYSQL_DB_TABLE_NAME_NFT = "nft"
+MYSQL_DB_TABLE_NAME_FT_BALANCE = "erc20_balance"
+MYSQL_DB_TABLE_NAME_NFT_BALANCE = "nft_balance"
+MYSQL_DB_TABLE_NAME_FT_TRANSFER = "erc20_transfers"
+MYSQL_DB_TABLE_NAME_NFT_TRANSFER = "transfers"
+MYSQL_DB_TABLE_NAME_POAP_TRANSFER = "poap_transfers"
+
+#etherscan api
+ETHERSCAN_API_KEY = ""
+
+#infura api
+INFURA_PROJECT_ID = ""
+INFURA_API_KEY = ""
+
+#moralis api
+MORALIS_API_URL = "https://deep-index.moralis.io/api/v2"
+MORALIS_API_KEY = "" #TODO Add
+MORALIS_API_RATE_LIMIT = 25 #reqs/sec
