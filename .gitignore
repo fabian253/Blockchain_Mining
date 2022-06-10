@@ -56,7 +56,7 @@ Temporary Items
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,macos
 
 # Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
-config.py
+#config.py
 __pycache__
 datasets/
 !datasets/pfp_collections.csv
